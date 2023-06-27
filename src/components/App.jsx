@@ -5,13 +5,8 @@ import { Filter } from './Filter';
 import { nanoid } from 'nanoid';
 
 const App = () => {
-  const getInitialContacts = () => {
-    const savedContacts = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(savedContacts);
-    return parsedContacts || [];
-  };
-
-  const [contacts, setContacts] = useState(getInitialContacts());
+  const [isMounted, setIsMounted] = useState(false);
+  const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('');
 
   const appendContacts = contact => {
@@ -30,7 +25,16 @@ const App = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
+    setIsMounted(true);
+    const savedContacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(savedContacts);
+    setContacts(parsedContacts);
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      localStorage.setItem('contacts', JSON.stringify(contacts));
+    }
   }, [contacts]);
 
   //Metoda tworzy kontakt i modyfikuje state dodajac do niego nowy kontakt
