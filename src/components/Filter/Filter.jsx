@@ -1,7 +1,12 @@
 import css from './filter.module.css';
 import PropTypes from 'prop-types';
 
-export const Filter = ({ filterContacts }) => {
+export const Filter = ({ setFilter }) => {
+  //Ustawia filtr do wyszukiwania kontaktów
+  const filterContacts = event => {
+    setFilter(event.target.value);
+  };
+
   return (
     <div className={css.filter}>
       <p>Find contacts by name</p>
@@ -16,5 +21,5 @@ export const Filter = ({ filterContacts }) => {
 };
 
 Filter.propTypes = {
-  filterContacts: PropTypes.func.isRequired,
+  setFilter: PropTypes.func.isRequired,
 };

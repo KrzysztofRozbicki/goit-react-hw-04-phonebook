@@ -9,21 +9,6 @@ const App = () => {
   const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('');
 
-  const appendContacts = contact => {
-    setContacts([...contacts, contact]);
-  };
-
-  //Ustawia filtr do wyszukiwania kontaktów
-  const filterContacts = event => {
-    setFilter(event.target.value);
-  };
-
-  //Usuwa kontakt z bazy danych na podstawie id
-
-  const deleteContact = id => {
-    setContacts(prevState => prevState.filter(contact => contact.id !== id));
-  };
-
   useEffect(() => {
     setIsMounted(true);
     const savedContacts = localStorage.getItem('contacts');
@@ -36,6 +21,11 @@ const App = () => {
       localStorage.setItem('contacts', JSON.stringify(contacts));
     }
   }, [contacts]);
+
+  //funkcja dodaje kontakt do tablicy kontaktów
+  const appendContacts = contact => {
+    setContacts([...contacts, contact]);
+  };
 
   //Metoda tworzy kontakt i modyfikuje state dodajac do niego nowy kontakt
   const addContact = event => {
@@ -64,13 +54,13 @@ const App = () => {
   return (
     <>
       <h1>Phonebook</h1>
-      <ContactForm addContact={addContact} />
+      <ContactForm contacts={contacts} setContacts={setContacts} />
       <h2>Contacts</h2>
-      <Filter filterContacts={filterContacts} />
+      <Filter setFilter={setFilter} />
       <ContactList
         contacts={contacts}
         filterValue={filter}
-        deleteContact={deleteContact}
+        setContacts={setContacts}
       />
     </>
   );

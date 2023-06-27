@@ -1,7 +1,12 @@
 import css from './contactList.module.css';
 import PropTypes from 'prop-types';
 
-export const ContactList = ({ contacts, filterValue, deleteContact }) => {
+export const ContactList = ({ contacts, filterValue, setContacts }) => {
+  //Usuwa kontakt z bazy danych na podstawie id
+  const deleteContact = id => {
+    setContacts(prevState => prevState.filter(contact => contact.id !== id));
+  };
+
   //Funkcja filtruje kontakty na podstawie przekazanej tablicy (contacts) i stringa (filter)
   const filteredArray = contacts.filter(contact =>
     contact.name.toLowerCase().includes(filterValue.toLowerCase())
@@ -36,5 +41,5 @@ ContactList.propTypes = {
     })
   ).isRequired,
   filterValue: PropTypes.string.isRequired,
-  deleteContact: PropTypes.func.isRequired,
+  setContacts: PropTypes.func.isRequired,
 };

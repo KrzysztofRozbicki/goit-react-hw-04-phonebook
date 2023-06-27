@@ -1,7 +1,38 @@
 import css from './contactForm.module.css';
 import PropTypes from 'prop-types';
+import { nanoid } from 'nanoid';
 
-export const ContactForm = ({ addContact }) => {
+export const ContactForm = ({ contacts, setContacts }) => {
+  //funkcja dodaje kontakt do tablicy kontaktów
+  const appendContacts = contact => {
+    setContacts([...contacts, contact]);
+  };
+
+  //Metoda tworzy kontakt i modyfikuje state dodajac do niego nowy kontakt
+  const addContact = event => {
+    event.preventDefault();
+
+    //Tworzy nowy obiekt - kontakt na podstawie danych z inputów
+    const contact = {
+      id: nanoid(),
+      name: event.target.elements.name.value,
+      number: event.target.elements.number.value,
+    };
+
+    // Walidacja - sprawdza czy kontakt jest już dodany (case insensitive)
+    if (
+      contacts.some(
+        person => person.name.toLowerCase() === contact.name.toLowerCase()
+      )
+    ) {
+      return alert(`${contact.name} already in contacts`);
+    }
+
+    //Dodaje kontakt do state
+    appendContacts(contact);
+    event.target.reset();
+  };
+
   return (
     <form onSubmit={addContact} className={css.form}>
       <label>
@@ -36,5 +67,12 @@ export const ContactForm = ({ addContact }) => {
 };
 
 ContactForm.propTypes = {
-  addContact: PropTypes.func.isRequired,
+  contacts: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  setContacts: PropTypes.func.isRequired,
 };
