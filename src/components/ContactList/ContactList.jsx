@@ -1,16 +1,25 @@
-import css from './contactList.module.css';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteContact } from '../../redux/contactsSlice';
 
-export const ContactList = ({ contacts, filterValue, setContacts }) => {
+import css from './contactList.module.css';
+
+export const ContactList = () => {
+  const dispatch = useDispatch();
+
+  const contacts = useSelector(state => state.contacts);
+  const filterValue = useSelector(state => state.filter);
   //Usuwa kontakt z bazy danych na podstawie id
-  const deleteContact = id => {
-    setContacts(prevState => prevState.filter(contact => contact.id !== id));
+
+  const handleDeleteContact = id => {
+    dispatch(deleteContact(id));
   };
 
   //Funkcja filtruje kontakty na podstawie przekazanej tablicy (contacts) i stringa (filter)
+
   const filteredArray = contacts.filter(contact =>
     contact.name.toLowerCase().includes(filterValue.toLowerCase())
   );
+
   //Renderowanie listy kontaktów na podstawie przefiltrowanej tablicy
   return (
     <ul className={css.contacts}>
@@ -22,7 +31,7 @@ export const ContactList = ({ contacts, filterValue, setContacts }) => {
           <button
             className={css.contacts__button}
             type="button"
-            onClick={() => deleteContact(id)}
+            onClick={() => handleDeleteContact(id)}
           >
             Delete Contact
           </button>
@@ -30,16 +39,4 @@ export const ContactList = ({ contacts, filterValue, setContacts }) => {
       ))}
     </ul>
   );
-};
-
-ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  filterValue: PropTypes.string.isRequired,
-  setContacts: PropTypes.func.isRequired,
 };

@@ -1,10 +1,13 @@
-import css from './filter.module.css';
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { addFilter } from '../../redux/filterSlice.js';
 
-export const Filter = ({ setFilter }) => {
+import css from './filter.module.css';
+
+export const Filter = () => {
+  const dispatch = useDispatch();
   //Ustawia filtr do wyszukiwania kontaktów
-  const filterContacts = event => {
-    setFilter(event.target.value);
+  const handleFilter = event => {
+    dispatch(addFilter(event.target.value));
   };
 
   return (
@@ -13,13 +16,9 @@ export const Filter = ({ setFilter }) => {
       <input
         className={css.filter__input}
         type="text"
-        onChange={filterContacts}
+        onChange={handleFilter}
         placeholder="Contact name"
       ></input>
     </div>
   );
-};
-
-Filter.propTypes = {
-  setFilter: PropTypes.func.isRequired,
 };

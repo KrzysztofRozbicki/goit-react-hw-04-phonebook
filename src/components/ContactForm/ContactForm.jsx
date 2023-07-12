@@ -1,15 +1,15 @@
 import css from './contactForm.module.css';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+import { addContact } from '../../redux/contactsSlice';
 import { nanoid } from 'nanoid';
 
-export const ContactForm = ({ contacts, setContacts }) => {
-  //funkcja dodaje kontakt do tablicy kontaktów
-  const appendContacts = contact => {
-    setContacts([...contacts, contact]);
-  };
+export const ContactForm = () => {
+  const dispatch = useDispatch();
+
+  const contacts = useSelector(state => state.contacts);
 
   //Metoda tworzy kontakt i modyfikuje state dodajac do niego nowy kontakt
-  const addContact = event => {
+  const handleFormSubmit = event => {
     event.preventDefault();
 
     //Tworzy nowy obiekt - kontakt na podstawie danych z inputów
@@ -27,14 +27,12 @@ export const ContactForm = ({ contacts, setContacts }) => {
     ) {
       return alert(`${contact.name} already in contacts`);
     }
-
-    //Dodaje kontakt do state
-    appendContacts(contact);
+    dispatch(addContact(contact));
     event.target.reset();
   };
 
   return (
-    <form onSubmit={addContact} className={css.form}>
+    <form onSubmit={handleFormSubmit} className={css.form}>
       <label>
         Name
         <input
@@ -64,15 +62,4 @@ export const ContactForm = ({ contacts, setContacts }) => {
       </button>
     </form>
   );
-};
-
-ContactForm.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  setContacts: PropTypes.func.isRequired,
 };
